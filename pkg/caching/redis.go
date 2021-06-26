@@ -34,10 +34,15 @@ var _ CacheServiceInterface = &RedisService{}
 
 func NewRedisService(env *app.Environment, dbNo int) *RedisService {
 	connectKey := env.UseCacheDB + "_" + env.EnvMode + "_"
+	env.Cache = app.Caching{
+		Host: os.Getenv(connectKey + "HOST"),
+		Port: os.Getenv(connectKey + "PORT"),
+		Password: os.Getenv(connectKey + "PASSWORD"),
+	}
 	return &RedisService{
 		redis.NewClient(&redis.Options{
-		Addr: os.Getenv(connectKey + "HOST") + ":" + os.Getenv(connectKey + "PORT"),
-		Password: os.Getenv(connectKey + "PASSWORD"),
+		Addr: env.Cache.Host + ":" + env.Cache.Port,
+		Password: env.Cache.Password,
 		DB: dbNo,
 	})}
 }

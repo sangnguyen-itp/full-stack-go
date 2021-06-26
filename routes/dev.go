@@ -1,7 +1,11 @@
 package routes
 
-import "full-stack-go/controllers"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 func DevRoutes(r *Router) {
-	r.engine.GET("/", controllers.IndexPage())
+	r.engine.GET("/welcome", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{"msg": "welcome dev mode"})
+	})
 }

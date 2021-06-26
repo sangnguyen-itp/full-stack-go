@@ -6,7 +6,8 @@ import (
 
 type Environment struct {
 	App
-	Caching
+	Cache Caching
+	DB Database
 }
 
 func (env *Environment) Get() {

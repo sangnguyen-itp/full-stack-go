@@ -12,15 +12,17 @@ type DBEnvironment struct {}
 func (de *DBEnvironment) Connect(env *app.Environment, cfg *gorm.Config) {
 	connectKey := fmt.Sprintf("%s_%s_", env.UseDB, env.EnvMode)
 	if env.UseDB == "postgres" {
-		host := os.Getenv(connectKey + "HOST")
-		user := os.Getenv(connectKey + "USER")
-		password := os.Getenv(connectKey + "PASSWORD")
-		dbName := os.Getenv(connectKey + "DBNAME")
-		port := os.Getenv(connectKey + "PORT")
-		sslMode := os.Getenv(connectKey + "SSL")
+		env.DB = app.Database{
+			Host : os.Getenv(connectKey + "HOST"),
+			User:  os.Getenv(connectKey + "USER"),
+			Password : os.Getenv(connectKey + "PASSWORD"),
+			DbName : os.Getenv(connectKey + "DBNAME"),
+			Port : os.Getenv(connectKey + "PORT"),
+			SSL : os.Getenv(connectKey + "SSL"),
+		}
 
-		dbProvider := new(PostgresDB)
-		dbProvider.SetConnectionString(host, user, password, dbName, port, sslMode)
+		dbProvider := &PostgresDB{env:env}
+		dbProvider.SetConnectionString()
 		dbProvider.ConnectDB(NewBaseConfig(env), cfg)
 	}
 }

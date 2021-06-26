@@ -5,10 +5,10 @@ import (
 )
 
 type Connection interface {
+	CreateDatabase(dbName string) error
+	GetDbName() string
 	ConnectDB(basicConfig BaseConfig, config *gorm.Config)
-	SetConnectionString(
-		host, user, password, dbname, port, sslMode string,
-	)
+	SetConnectionString()
 }
 
 var DBInstance *gorm.DB

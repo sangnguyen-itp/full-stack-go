@@ -42,11 +42,16 @@ var _ CacheServiceInterface = &RedisService{}
 
 func NewMemcachedServiceService(env *app.Environment) *MemcachedService {
 	connectKey := env.UseCacheDB + "_" + env.EnvMode + "_"
+	env.Cache = app.Caching{
+		Host: os.Getenv(connectKey + "HOST"),
+		Port: os.Getenv(connectKey + "PORT"),
+		Password: os.Getenv(connectKey + "PASSWORD"),
+	}
 	mem := &MemcachedService{
 		client: memcache.New(
 			fmt.Sprintf("%s:%s",
-				os.Getenv(connectKey + "HOST"),
-				os.Getenv(connectKey + "PORT"))),
+				env.Cache.Host,
+				env.Cache.Port)),
 	}
 	// trigger connection
 	if err := mem.Set("trigger","success"); err != nil {
